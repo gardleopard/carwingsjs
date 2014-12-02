@@ -17,7 +17,7 @@ var PLUGIN_STATUS_DISCONNECTED  = 'NOT_CONNECTED'
  */
 var _post = function(service, payload, callback) {
   request.post({
-    url: 'https://nissan-na-smartphone-biz.viaaq.com/aqPortal/smartphoneProxy/' + service,
+    url: 'https://mobileapps.prod.nissan.eu/android-carwings-backend-v2/2.0/carwingsServlet',
     headers: {
       'User-Agent': 'NissanLEAF/1.40 CFNetwork/485.13.9 Darwin/11.0.0 carwingsjs',
       'Content-Type': 'text/xml'
@@ -47,14 +47,14 @@ var _post = function(service, payload, callback) {
 var _getVehicle = function(node) {
   vehicleResponse = {};
   vehicleResponse.vin = node['SmartphoneBatteryStatusResponseType']['VehicleInfo']['Vin'];
-  vehicleResponse.batteryChargingStatus = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:BatteryStatus']['ns3:BatteryChargingStatus'];
-  vehicleResponse.batteryCapacity = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:BatteryStatus']['ns3:BatteryCapacity'];
-  vehicleResponse.batteryRemainingAmount = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:BatteryStatus']['ns3:BatteryRemainingAmount'];
+  vehicleResponse.batteryChargingStatus = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['BatteryStatus']['BatteryChargingStatus'];
+  vehicleResponse.batteryCapacity = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['BatteryStatus']['BatteryCapacity'];
+  vehicleResponse.batteryRemainingAmount = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['BatteryStatus']['BatteryRemainingAmount'];
   vehicleResponse.lastBatteryStatusCheckExecutionTime = node['SmartphoneBatteryStatusResponseType']['lastBatteryStatusCheckExecutionTime']
-  vehicleResponse.pluginState = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:PluginState'];
+  vehicleResponse.pluginState = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['PluginState'];
   if (vehicleResponse.pluginState != PLUGIN_STATUS_DISCONNECTED) {
-    vehicleResponse.hoursRequiredToFull = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:TimeRequiredToFull']['ns3:HourRequiredToFull'];
-    vehicleResponse.minutesRequiredToFull = node['SmartphoneBatteryStatusResponseType']['ns3:BatteryStatusRecords']['ns3:TimeRequiredToFull']['ns3:MinutesRequiredToFull'];
+    vehicleResponse.hoursRequiredToFull = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['TimeRequiredToFull200']['HourRequiredToFull'];
+    vehicleResponse.minutesRequiredToFull = node['SmartphoneBatteryStatusResponseType']['BatteryStatusRecords']['TimeRequiredToFull200']['MinutesRequiredToFull'];
   }
   return vehicleResponse;
 };
@@ -91,7 +91,7 @@ exports.login = function(username, password, callback) {
       callback(error);
     }
     else {
-      var loginResponse = _getVehicle(result['ns2:SmartphoneLoginWithAdditionalOperationResponse']['ns4:SmartphoneLatestBatteryStatusResponse']);
+      var loginResponse = _getVehicle(result['SmartphoneLoginWithAdditionalOperationResponse']['SmartphoneLatestBatteryStatusResponse']);
       loginResponse._full = result;
       callback(null, loginResponse);
     }
